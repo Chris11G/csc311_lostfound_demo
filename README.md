@@ -1,6 +1,6 @@
 # Campus Lost & Found – with accounts
 
-**Student:** YOUR NAME HERE
+**Student:** CHRISTOPHER GONZALEZ
 **Course:** CSC 311 – Advanced Programming, Module 9 (Security)
 
 A Spring Boot app where visitors register, sign in, and then see the Campus Lost & Found page.
