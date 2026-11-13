@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Campus Lost &amp; Found</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    h1   { color: green; }
+  </style>
+</head>
+<body>
+  <h1>Campus Lost &amp; Found</h1>
+
+  <!-- Items come from /api/items -->
+  <ul id="items"></ul>
+
+  <h2>Found something?</h2>
+  <form id="reportForm">
+    <p><input id="title" placeholder="What is it?"></p>
+    <p><input id="location" placeholder="Where did you find it?"></p>
+    <button type="submit">Report item</button>
+  </form>
+
+  <script>
+    async function loadItems() {
+      const items = await fetch("/api/items").then(r => r.json());
+      const list = document.getElementById("items");
+      list.innerHTML = "";
+      for (const item of items) {
+        const li = document.createElement("li");
+        li.textContent = item.title + " – " + item.location;
+        list.appendChild(li);
+      }
+    }
+
+    document.getElementById("reportForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const item = {
+        title: document.getElementById("title").value,
+        location: document.getElementById("location").value
+      };
+      await fetch("/api/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item)
+      });
+      event.target.reset();
+      loadItems();
+    });
+
+    loadItems();
+  </script>
+</body>
+</html>
