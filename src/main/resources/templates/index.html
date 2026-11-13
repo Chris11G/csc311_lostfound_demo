@@ -1,15 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- CSRF token for the fetch POST below -->
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
   <title>Campus Lost &amp; Found</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 24px; }
-    h1   { color: green; }
+    body   { font-family: Arial, sans-serif; margin: 24px; }
+    h1     { color: green; }
+    header { display: flex; gap: 12px; align-items: center; }
+    header form { margin: 0; }
   </style>
 </head>
 <body>
+  <header>
+    <span>Signed in as <strong th:text="${username}">user</strong></span>
+    <!-- Sign out must be a POST with the CSRF token; th:action adds it -->
+    <form th:action="@{/logout}" method="post">
+      <button type="submit">Sign out</button>
+    </form>
+  </header>
+
   <h1>Campus Lost &amp; Found</h1>
 
   <!-- Items come from /api/items -->
@@ -23,6 +36,9 @@
   </form>
 
   <script>
+    const csrfToken  = document.querySelector('meta[name="_csrf"]').content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
     async function loadItems() {
       const items = await fetch("/api/items").then(r => r.json());
       const list = document.getElementById("items");
@@ -42,7 +58,10 @@
       };
       await fetch("/api/items", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          [csrfHeader]: csrfToken
+        },
         body: JSON.stringify(item)
       });
       event.target.reset();
