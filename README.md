@@ -24,7 +24,7 @@ Then open <http://localhost:8080>. You will be sent to the sign-in page.
 3. Report an item, then click **Sign out**.
 
 ## H2 console
-
+//
 Open <http://localhost:8080/h2-console> and connect with:
 
 - JDBC URL: `jdbc:h2:file:./data/lostfound-db`
